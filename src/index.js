@@ -26,14 +26,14 @@ const handleError = (res, error) => {
   console.error(error);
   res.status(500).json({
     message: "An internal server error occurred",
-    data: error.message || error, 
+    data: error.message || error,
   });
 };
 
 // Route for server status
 app.get("/", (req, res) => {
   res.json({
-    message: "Retina.AI Server APIs",
+    message: "Retena.ai Server APIs",
     data: null,
   });
 });
@@ -59,11 +59,24 @@ app.post("/image-gen-with-flux-1.1", async (req, res) => {
     aspect_ratio,
     output_format,
     output_quality: 80,
-    safety_tolerance: 4,
+    safety_tolerance: 3,
     prompt_upsampling: false, // Change to true for normal generations
   };
 
   await callReplicateAPI(res, "black-forest-labs/flux-1.1-pro", input);
+});
+
+// POST request for generating output from Flux1.1 ultra
+app.post("/image-gen-with-flux-1.1-ultra", async (req, res) => {
+  const { raw, prompt, aspect_ratio, output_format } = req.body;
+  const input = {
+    prompt,
+    aspect_ratio,
+    output_format,
+    safety_tolerance: 3,
+    raw,
+  };
+  await callReplicateAPI(res, "black-forest-labs/flux-1.1-pro-ultra", input);
 });
 
 // POST request for Flux-dev realism
